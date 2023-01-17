@@ -153,9 +153,11 @@ void printGraph_cmd(pnode *head) {
 
 void deleteGraph_cmd(pnode *head) {
     pnode p = *head;
+    pnode del ;
     while (p) {
+        del= p->next;
         delete_node_cmd(head, p->node_num);
-        p = p->next;
+        p = del;
     }
     return;
 }
@@ -179,10 +181,14 @@ void shortsPath_cmd(pnode head, int src, int dest) {
     //check the dist between the first vert to its next vert is less
     while (!isEmpty(&queue)) {
         shafel(&queue);
-        p = queue->data;
-        pop(&queue);
-        if(p->dist == INF)
+        p=pop(&queue);
+        if(p->dist == INF){
+            while (!isEmpty(&queue)){
+                ppriority fr= pop(&queue);
+            }
             return;
+        }
+
         e = p->edges;
         while (e) {
             if (p->dist + e->weight < e->endpoint->dist) {
@@ -190,6 +196,7 @@ void shortsPath_cmd(pnode head, int src, int dest) {
             }
             e = e->next;
         }
+
     }
     return;
 

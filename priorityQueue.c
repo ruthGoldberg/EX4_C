@@ -3,25 +3,19 @@
 #include "algo.h"
 
 
-void shafel(ppriority *head){
-    ppriority first = *head;
-    ppriority temp = (*head)->next;
-    ppriority help;
-    ppriority * prev = head;
-    //finding the min
-    while (temp) {
-        if (temp->data->dist < first->data->dist) {
-            *prev = temp;
-            help=temp->next;
-            first->next=help;
-            temp->next=first;
-            head=prev;
-            break;
-        }
-        temp = temp->next;
-    }
-    first = *head;
+void shafel(ppriority *head) {
 
+
+    ppriority first = *head;
+    ppriority next = (*head)->next;
+    while (next) {
+        if (next->data->dist < first->data->dist) {
+            pnode temp = next->data;
+            next->data = first->data;
+            first->data = temp;
+        }
+        next = next->next;
+    }
 }
 
 
@@ -53,24 +47,21 @@ void push(ppriority *head, pnode var) {
         while (start->next != NULL && start->next->data->dist <= temp->data->dist) {
             start = start->next;
         }
-        if (start->next == NULL) {
-            start->next = temp;
-        } else {
-            temp->next = start->next;
-            start->next = temp;
-        }
+        temp->next = start->next;
+        start->next = temp;
     }
 }
 
-void pop(ppriority *head) {
+pnode pop(ppriority *head) {
+    if(*(head) == NULL)
+        return NULL;
     ppriority temp = *head;
+    pnode poped = (*head)->data;
     (*head) = (*head)->next;
     free(temp);
+    return poped;
 }
 
-ppriority peek(ppriority *head) {
-    return (*head);
-}
 
 ppriority newNode(pnode var) {
     ppriority temp = (ppriority) malloc(sizeof(priorityQueue));

@@ -8,9 +8,7 @@ typedef struct PRIORITY_QUEUE_{
 
 int isEmpty(ppriority * head);
 void push(ppriority * head,pnode);
-void pop(ppriority * head);
-ppriority peek(ppriority * head);
+pnode pop(ppriority * head);
 ppriority newNode(pnode);
 void shafel(ppriority *head);
-
-void build_graph_cmd(pnode *head);
+void permute(pnode head ,int *arr, int l, int r);

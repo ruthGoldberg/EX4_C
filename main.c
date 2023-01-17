@@ -51,10 +51,5 @@ int main() {
         }
     }
     deleteGraph_cmd(&head);
-    
-
-
-
-
     return 0;
 }
