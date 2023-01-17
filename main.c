@@ -50,6 +50,8 @@ int main() {
                 break;
         }
     }
+    deleteGraph_cmd(&head);
+    
 
 
 
