@@ -4,13 +4,15 @@
 #include "nodes.h"
 #include "edges.h"
 
+#define INF 999999
 
 int main() {
     pnode head = NULL;
+    pnode p;
+    int src, dest;
     int del;
     char in = ' ';
     while(scanf("%c ", &in) != EOF) {
-        printf("%c, ",in);
         switch (in) {
             case 'A':
                 build_graph_cmd(&head);
@@ -18,22 +20,38 @@ int main() {
             case 'B':
                 insert_node_cmd(&head);
                 break;
-            default:
-                break;
+
             case 'D':
                 scanf("%d", &del);
                 delete_node_cmd(&head, del);
-                printGraph_cmd(&head);
+                break;
+            case 'S':
+                scanf("%d", &src);
+                scanf("%d", &dest);
+                shortsPath_cmd(head , src , dest);
+                int shortPath;
+                p=head;
+                while (p){
+                    if(p->node_num != dest)
+                        p=p->next;
+                    else break;
+                }
+                if(p->dist == INF){
+                    shortPath= -1;
+                }
+                shortPath= p->dist;
+                printf("Dijsktra shortest path: %d \n",shortPath);
+                break;
+            case 'T':
+                TSP_cmd(head);
                 break;
 
+            default:
+                break;
         }
     }
-//            case 'S':
-//                shortsPath_cmd(head);
-//                break;
-//            case 'T':
-//                TSP_cmd(head);
-//                break;
+
+
 
 
     return 0;

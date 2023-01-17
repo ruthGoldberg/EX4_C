@@ -6,9 +6,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define INF 999999
+
 void insert_node_cmd(pnode *head);
 
 void printGraph_cmd(pnode *head);
+
+void permute(pnode head ,int *arr, int l, int r);
+
+int min = INF;
 
 //A sizeNodes nodeNum
 void build_graph_cmd(pnode *head) {
@@ -34,7 +40,6 @@ void build_graph_cmd(pnode *head) {
             createEdge(src, dst, w, head);
         }
     }
-    printGraph_cmd(head);
     return;
 }
 
@@ -42,7 +47,6 @@ void build_graph_cmd(pnode *head) {
 void insert_node_cmd(pnode *head) {
     int numNode;
     scanf("%d", &numNode); // the number of the node
-    printf("%d \n", numNode);
     pnode p = *head;
     size_t ex = exists(numNode, head);
     if (ex) {
@@ -68,7 +72,7 @@ void insert_node_cmd(pnode *head) {
     while ((in != 0) && (in != EOF)) {
         scanf("%d", &w);
         if (ex) {
-            createEdge(numNode, dst, w, head );
+            createEdge(numNode, dst, w, head);
         } else {
             insertLast(numNode, head);
             ex = 1;
@@ -77,7 +81,6 @@ void insert_node_cmd(pnode *head) {
         in = scanf("%d", &dst);
     }
 
-    printGraph_cmd(head);
     return;
 }
 
@@ -116,7 +119,7 @@ void delete_node_cmd(pnode *head, int del) {
         if (p->node_num == del) {
             *prev = p->next;
             free(p);
-            p = *prev;
+            p = (*prev);
             return;
         } else {
             prev = &(p->next);
@@ -135,14 +138,13 @@ void printGraph_cmd(pnode *head) {
     pnode p = *head;
     while (p) {
         pedge e = p->edges;
-        if(e) {
+        if (e) {
             while (e) {
-                printf("(%d)----%d---->(%d)\n", p->node_num,e->weight,e->endpoint->node_num);
+                printf("(%d)----%d---->(%d)\n", p->node_num, e->weight, e->endpoint->node_num);
                 e = e->next;
             }
-        }
-        else{
-            printf("(%d)\n",p->node_num);
+        } else {
+            printf("(%d)\n", p->node_num);
         }
         p = p->next;
     }
@@ -155,11 +157,97 @@ void deleteGraph_cmd(pnode *head) {
         delete_node_cmd(head, p->node_num);
         p = p->next;
     }
-    printGraph_cmd(head);
     return;
 }
 
-void shortsPath_cmd(pnode head);
+void shortsPath_cmd(pnode head, int src, int dest) {
 
-void TSP_cmd(pnode head);
+    ppriority queue = NULL;
+
+    // all node dist is 0
+    pnode p = head;
+    while (p != NULL) {
+        if (p->node_num != src) {
+            p->dist = INF;
+        } else{
+            p->dist = 0;
+        }
+        push(&queue, p);
+        p = p->next;
+    }
+    pedge e;
+    //check the dist between the first vert to its next vert is less
+    while (!isEmpty(&queue)) {
+        shafel(&queue);
+        p = queue->data;
+        pop(&queue);
+        if(p->dist == INF)
+            return;
+        e = p->edges;
+        while (e) {
+            if (p->dist + e->weight < e->endpoint->dist) {
+                e->endpoint->dist = p->dist + e->weight;
+            }
+            e = e->next;
+        }
+    }
+    return;
+
+}
+
+
+void TSP_cmd(pnode head) {
+    min = INF;
+    int arr_len;
+    scanf("%d", &arr_len);
+    int arrPerm[arr_len];
+    for (int i = 0; i < arr_len; i++) {
+        scanf("%d", &arrPerm[i]);
+    }
+    permute(head , arrPerm , 0 ,arr_len-1);
+    if(min == INF)
+        min = -1;
+    printf("TSP shortest path: %d\n",min);
+
+}
+
+void permute(pnode head ,int *arr, int l, int r) {
+    int sum = 0;
+    if (l == r) {
+        for (int i = 0; i < r; i++){
+            shortsPath_cmd(head , arr[i] , arr[i+1]);
+            pnode p = head;
+            p=head;
+            while (p){
+                if(p->node_num != arr[i+1])
+                    p=p->next;
+                else break;
+            }
+
+            sum += p->dist ;
+        }
+        if(sum < min)
+            min = sum;
+    }
+
+     else {
+        for (int i = l; i <= r; i++) {
+            // Swapping done
+            int temp = arr[l];
+            arr[l] = arr[i];
+            arr[i] = temp;
+
+            // Recursion called
+            permute(head,arr, l + 1, r);
+
+            //backtrack
+            temp = arr[l];
+            arr[l] = arr[i];
+            arr[i] = temp;
+        }
+    }
+}
+
+
+
 

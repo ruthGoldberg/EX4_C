@@ -11,6 +11,7 @@ pnode createNodes(int n){
     head->node_num= n;
     head ->edges = NULL;
     head ->next = NULL;
+    head->dist=0;
     return head;
 }
 
