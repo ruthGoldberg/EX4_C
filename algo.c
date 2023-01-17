@@ -207,7 +207,7 @@ void TSP_cmd(pnode head) {
     permute(head , arrPerm , 0 ,arr_len-1);
     if(min == INF)
         min = -1;
-    printf("TSP shortest path: %d\n",min);
+    printf("TSP shortest path: %d \n",min);
 
 }
 
